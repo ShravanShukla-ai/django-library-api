@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+import dj_database_url
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +26,16 @@ SECRET_KEY = 'django-insecure-bi5!2m5)k)rk+#a1c=&*@=g1lfsi6#pgr4i_8zjj2yl*hx7*9p
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = [] # Comment out or delete the old line
+
+ALLOWED_HOSTS = [
+    'django-library-api.onrender.com', # Replace with your actual Render URL
+]
+
+# This part allows Render's health checks to work
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 
 # Application definition
@@ -76,6 +86,7 @@ WSGI_APPLICATION = 'library_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -85,6 +96,13 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '3307',
     }
+}
+'''
+# Database
+# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
+
+DATABASES = {
+    'default': dj_database_url.config(conn_max_age=600)
 }
 
 
